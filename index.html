@@ -107,7 +107,7 @@
     <header class="h-14 border-b border-cyber-dim flex items-center justify-between px-6 bg-black shrink-0 z-20">
         <div class="flex items-center gap-3">
             <div class="w-3 h-3 bg-cyber-primary rounded-full animate-pulse"></div>
-            <h1 class="font-bold tracking-widest text-lg">METAGEN_AI <span class="text-xs text-cyber-primary/50 ml-2">v4.5_GITHUB_FIX</span></h1>
+            <h1 class="font-bold tracking-widest text-lg">METAGEN_AI <span class="text-xs text-cyber-primary/50 ml-2">v4.6_STABLE_BYOK</span></h1>
         </div>
         <div class="flex items-center gap-4">
             <div id="systemStatus" class="text-xs text-cyber-primary/70 font-mono hidden sm:block">SYSTEM_IDLE</div>
@@ -235,10 +235,10 @@
                 <div class="mb-4 text-center">
                     <i data-lucide="shield-lock" class="w-10 h-10 text-cyber-primary mx-auto mb-2"></i>
                     <h3 class="text-white font-bold mb-1">Enter Gemini API Key</h3>
-                    <p class="text-xs text-cyber-primary/60 mb-2">PENTING: Gunakan Key Anda sendiri untuk GitHub Pages.</p>
-                    <p class="text-[10px] text-red-500 mb-4 bg-red-900/20 p-2 border border-red-900">Key Default (Bawaan) sering diblokir oleh Google jika dipakai di hosting publik karena limit kuota.</p>
+                    <p class="text-xs text-cyber-primary/60 mb-2">SETUP REQUIRED: Key Default ditolak/over-quota.</p>
+                    <p class="text-[10px] text-red-500 mb-4 bg-red-900/20 p-2 border border-red-900">Key Default yang Anda berikan ditolak oleh Google. Harap masukkan Key Pribadi Anda agar aplikasi dapat berjalan.</p>
                 </div>
-                <input type="password" id="apiKeyInput" class="cyber-input w-full p-3 text-sm mb-2 text-center" placeholder="AIzaSy...">
+                <input type="password" id="apiKeyInput" class="cyber-input w-full p-3 text-sm mb-2 text-center" placeholder="Paste AIzaSy... here">
                 <p class="text-[10px] text-cyber-dim text-center mb-4">Key disimpan di browser Anda (LocalStorage). Aman.</p>
                 <div class="flex justify-center">
                     <button onclick="saveKey()" class="btn-cyber px-6 py-2 text-xs w-full">SAVE & AUTHENTICATE</button>
@@ -259,7 +259,9 @@
     <script>
         // --- CONFIG ---
         const DEFAULT_MODEL = "gemini-2.5-flash-preview-09-2025";
-        const DEFAULT_KEY = "AIzaSyC5EpEgYA9oovtRdIgkF3eZkUpGb4N-Ur8";
+        // Default Key dikosongkan karena yang sebelumnya ditolak oleh Google.
+        // Memaksa user menggunakan key sendiri adalah cara paling stabil.
+        const DEFAULT_KEY = ""; 
         
         // --- STATE ---
         let fileQueue = []; 
@@ -268,7 +270,7 @@
         let stopSignal = false;
         
         // --- API KEY INIT ---
-        // Prioritize user key from storage, fallback to default
+        // Prioritize user key from storage, fallback to default (which is now empty)
         let userApiKey = localStorage.getItem("metagen_api_key");
         
         // --- DOM ELEMENTS ---
@@ -296,6 +298,10 @@
         window.onload = () => {
             lucide.createIcons();
             updateKeyStatus();
+            // Automatically prompt for key if missing to avoid confusion
+            if (!userApiKey) {
+                setTimeout(() => toggleKeyModal(), 500);
+            }
         };
 
         function updateKeyStatus() {
@@ -303,8 +309,8 @@
                 els.keyStatusText.innerText = "CUSTOM KEY";
                 els.keyStatusText.className = "text-[10px] hidden sm:inline text-cyber-primary";
             } else {
-                els.keyStatusText.innerText = "DEFAULT KEY";
-                els.keyStatusText.className = "text-[10px] hidden sm:inline text-cyber-warning";
+                els.keyStatusText.innerText = "NO KEY SET";
+                els.keyStatusText.className = "text-[10px] hidden sm:inline text-cyber-alert animate-pulse";
             }
         }
 
@@ -313,6 +319,7 @@
             if (els.keyModal.classList.contains('hidden')) {
                 els.keyInput.value = userApiKey || "";
                 els.keyModal.classList.remove('hidden');
+                els.keyInput.focus();
             } else {
                 els.keyModal.classList.add('hidden');
             }
@@ -325,20 +332,13 @@
                 localStorage.setItem("metagen_api_key", val);
                 updateKeyStatus();
                 toggleKeyModal();
-                alert("Key saved! Retry processing.");
+                alert("Key saved! Ready to process.");
                 
                 // If we were stopped due to error, try to reset UI state
                 stopSignal = false;
                 if(fileQueue.length > 0) els.btnGenerate.disabled = false;
             } else {
-                // If user clears input, revert to null (which means fallback to default in logic)
-                // Actually, let's allow clearing to force default
-                if(confirm("Clear custom key and use default? (Default might fail on GitHub)")) {
-                    userApiKey = null;
-                    localStorage.removeItem("metagen_api_key");
-                    updateKeyStatus();
-                    toggleKeyModal();
-                }
+                 alert("Please enter a valid key from Google AI Studio.");
             }
         };
 
@@ -484,8 +484,14 @@
             stopSignal = false;
             if (isProcessing) return;
             
-            // USE CUSTOM KEY IF AVAILABLE, ELSE DEFAULT
+            // Check for valid key immediately
             const activeKey = userApiKey || DEFAULT_KEY;
+            
+            if (!activeKey) {
+                alert("System Halted: No API Key detected. Please enter a key in the settings menu.");
+                toggleKeyModal();
+                return;
+            }
             
             isProcessing = true;
             els.btnGenerate.disabled = true;
@@ -500,7 +506,7 @@
 
             isProcessing = false;
             els.btnGenerate.disabled = false;
-            els.status.innerText = stopSignal ? "SYSTEM_HALTED // KEY INVALID" : "SYSTEM_IDLE // JOB COMPLETE";
+            els.status.innerText = stopSignal ? "SYSTEM_HALTED // CHECK KEY" : "SYSTEM_IDLE // JOB COMPLETE";
             updateStats();
         }
 
@@ -546,19 +552,15 @@
                     if (!response.ok) {
                         const status = response.status;
                         
-                        // 400 (Bad Request - often API Key invalid) or 403 (Forbidden - domain restriction)
+                        // 400/403 often means key rejected
                         if (status === 400 || status === 403) {
                             stopSignal = true; // Stop the whole queue
-                            item.status = 'pending'; // Reset current item
+                            item.status = 'pending'; // Reset current item so it can be retried
                             
-                            // Show helpful error
-                            const msg = !userApiKey 
-                                ? "KEY DEFAULT DITOLAK. Key bawaan ini tidak valid di GitHub Pages. Harap masukkan Key Pribadi Anda." 
-                                : "KEY DITOLAK. Key Anda mungkin salah atau tidak memiliki kuota.";
-                            
+                            const msg = "API KEY DITOLAK. Key yang Anda gunakan tidak valid atau diblokir. Silakan ganti di menu settings.";
                             showError(msg);
                             alert(msg);
-                            toggleKeyModal(); // Force open modal
+                            toggleKeyModal();
                             throw new Error("AUTH_FAIL"); 
                         }
                         
@@ -590,7 +592,7 @@
                     success = true;
 
                 } catch (err) {
-                    if (err.message === "AUTH_FAIL") return; // Exit logic already handled above
+                    if (err.message === "AUTH_FAIL") return; // Exit logic handled above
                     
                     console.error(`Retry ${retryCount+1}/${maxRetries} failed:`, err);
                     retryCount++;
