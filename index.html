@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metagen AI: SYSTEM_OVERRIDE</title>
+    <title>Metagen AI: ZERO_LATENCY</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load JetBrains Mono Font for Terminal look -->
@@ -23,7 +23,8 @@
                             primary: '#00ff41', // Matrix Green
                             bright: '#ccffcc',
                             alert: '#ff003c',
-                            warning: '#ffff00'
+                            warning: '#ffff00',
+                            accent: '#008F11'
                         }
                     },
                     fontFamily: {
@@ -38,845 +39,491 @@
             font-family: 'JetBrains Mono', monospace;
             background-color: #000000;
             background-image: 
-                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
+                linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
             color: #00ff41;
             overflow-x: hidden;
         }
 
-        /* CRT Scanline Effect */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 50;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
+        /* Minimal scrollbar for speed */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #0a4f0a; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ff41; }
 
-        /* Cyber Panel */
         .cyber-panel {
-            background: rgba(5, 15, 5, 0.85);
-            border: 1px solid #00ff41;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
-            position: relative;
-        }
-        .cyber-panel::after {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: -1px;
-            width: 10px;
-            height: 10px;
-            border-top: 2px solid #00ff41;
-            border-left: 2px solid #00ff41;
-        }
-        .cyber-panel::before {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            right: -1px;
-            width: 10px;
-            height: 10px;
-            border-bottom: 2px solid #00ff41;
-            border-right: 2px solid #00ff41;
+            background: rgba(2, 8, 2, 0.95);
+            border: 1px solid #0a4f0a;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.05);
         }
 
-        /* Terminal Input */
         .cyber-input {
             background: #000000;
             border: 1px solid #0a4f0a;
             color: #00ff41;
             font-family: 'JetBrains Mono', monospace;
-            transition: all 0.2s ease;
         }
         .cyber-input:focus {
             border-color: #00ff41;
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
             outline: none;
-            background: #051a05;
-        }
-        
-        select.cyber-input option {
-            background-color: #000000;
-            color: #00ff41;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #020202;
-            border-left: 1px solid #0a2e0a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #0a4f0a;
-            border: 1px solid #00ff41;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00ff41;
-        }
-
-        /* Glitch Animation for Text */
-        @keyframes glitch {
-            0% { text-shadow: 2px 0 #ff003c, -2px 0 #00ff41; }
-            25% { text-shadow: -2px 0 #ff003c, 2px 0 #00ff41; }
-            50% { text-shadow: 2px 0 #ff003c, -2px 0 #00ff41; }
-            75% { text-shadow: -2px 0 #ff003c, 2px 0 #00ff41; }
-            100% { text-shadow: 2px 0 #ff003c, -2px 0 #00ff41; }
-        }
-        .glitch-hover:hover {
-            animation: glitch 0.3s infinite;
-        }
-
-        /* Buttons */
-        .btn-cyber-primary {
-            background: #000000;
+        .btn-cyber {
+            background: #000;
             border: 1px solid #00ff41;
             color: #00ff41;
+            transition: all 0.2s;
             text-transform: uppercase;
+            font-weight: bold;
             letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
         }
-        .btn-cyber-primary:hover:not(:disabled) {
-            background: #00ff41;
-            color: #000000;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
-        }
-        .btn-cyber-primary:disabled {
-            border-color: #0a4f0a;
-            color: #0a4f0a;
-            cursor: not-allowed;
-        }
-
-        /* Success Button */
-        .btn-cyber-success {
-            background: #001100;
-            border: 1px solid #00cc33;
-            color: #ccffcc;
-        }
-        .btn-cyber-success:hover:not(:disabled) {
-            background: #00cc33;
-            color: #000000;
-            box-shadow: 0 0 15px rgba(0, 204, 51, 0.5);
-        }
-
-        /* Loading Animation */
-        .cyber-loader {
-            border: 2px solid #0a2e0a;
-            border-top: 2px solid #00ff41;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Table Styles */
-        .cyber-table-head {
-            background: #051a05;
-            border-bottom: 2px solid #00ff41;
-        }
-        .cyber-table-row:hover {
-            background: rgba(0, 255, 65, 0.05);
-        }
-        
-        textarea {
-            border-radius: 0 !important;
-        }
-        
-        /* Selection */
-        ::selection {
+        .btn-cyber:hover:not(:disabled) {
             background: #00ff41;
             color: #000;
         }
-
-        .typing-cursor::after {
-            content: '█';
-            animation: blink 1s step-end infinite;
-            margin-left: 2px;
-            color: #00ff41;
+        .btn-cyber:disabled {
+            border-color: #0a2e0a;
+            color: #0a2e0a;
+            cursor: not-allowed;
         }
-        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Active Row Highlight */
+        .active-row {
+            background: rgba(0, 255, 65, 0.1);
+            border-left: 2px solid #00ff41;
+        }
     </style>
 </head>
-<body class="p-4 sm:p-6 min-h-screen flex flex-col items-center font-mono">
+<body class="h-screen flex flex-col overflow-hidden text-sm">
 
-    <!-- Decorative background elements -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-10 left-10 text-cyber-dim opacity-20 text-xs">
-            01001011 01010101<br>
-            00110100 01011010
+    <!-- Top Bar -->
+    <header class="h-14 border-b border-cyber-dim flex items-center justify-between px-6 bg-black shrink-0 z-20">
+        <div class="flex items-center gap-3">
+            <div class="w-3 h-3 bg-cyber-primary rounded-full animate-pulse"></div>
+            <h1 class="font-bold tracking-widest text-lg">METAGEN_AI <span class="text-xs text-cyber-primary/50 ml-2">v4.2_FIXED</span></h1>
         </div>
-        <div class="absolute bottom-10 right-10 text-cyber-dim opacity-20 text-xs text-right">
-            SYSTEM_READY<br>
-            INIT_PROTOCOL_V3
+        <div class="flex items-center gap-4">
+            <div id="systemStatus" class="text-xs text-cyber-primary/70 font-mono">SYSTEM_IDLE</div>
+            <button onclick="document.getElementById('imageUpload').click()" class="btn-cyber px-4 py-1.5 text-xs flex items-center gap-2">
+                <i data-lucide="upload" class="w-3 h-3"></i> LOAD FILES
+            </button>
+            <input type="file" id="imageUpload" multiple accept="image/*" class="hidden" onchange="handleFileSelect(this.files)">
         </div>
-    </div>
+    </header>
 
-    <!-- Main Container -->
-    <div id="app" class="w-full max-w-[95rem] cyber-panel p-6 lg:p-8 relative transition-all duration-500 ease-in-out mt-8 mb-8 z-10">
+    <!-- Main Layout -->
+    <div class="flex-1 flex overflow-hidden">
         
-        <!-- Header -->
-        <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between border-b border-cyber-dim pb-6">
-            <div>
-                <h1 class="text-3xl md:text-4xl font-bold tracking-tighter flex items-center text-cyber-primary">
-                    <div class="p-2 border border-cyber-primary bg-black mr-3">
-                        <i data-lucide="terminal" class="w-8 h-8"></i>
-                    </div>
-                    <span class="glitch-hover cursor-default">METAGEN_AI_PRO</span>
-                </h1>
-                <p class="text-cyber-primary/70 mt-2 text-sm md:text-base font-mono ml-1 typing-cursor">> Menginisialisasi Generator Metadata Stok Foto...</p>
-            </div>
-            <div class="mt-4 md:mt-0 flex gap-2 items-center">
-                <div class="px-3 py-1 bg-black border border-cyber-primary text-xs text-cyber-primary font-mono shadow-[0_0_5px_rgba(0,255,65,0.3)]">v3.2.0_OPTIMIZED</div>
-            </div>
-        </header>
-
-        <!-- Image Upload and Action Panel -->
-        <section class="mb-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <!-- Upload Area -->
-            <div class="lg:col-span-3">
-                <input type="file" id="imageUpload" multiple accept="image/*" class="hidden" onchange="handleFileSelect(this.files)">
-                
-                <label for="imageUpload" id="uploadLabel" class="group relative flex flex-col items-center justify-center h-48 md:h-56 w-full border border-dashed border-cyber-dim hover:border-cyber-primary bg-black/50 hover:bg-cyber-dim/20 transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute inset-0 bg-cyber-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div class="z-10 flex flex-col items-center transform group-hover:scale-105 transition-transform duration-300">
-                        <div class="p-4 bg-black border border-cyber-dim group-hover:border-cyber-primary shadow-[0_0_10px_rgba(0,255,65,0.1)] mb-4 transition-all">
-                            <i data-lucide="binary" class="w-8 h-8 text-cyber-primary/70 group-hover:text-cyber-primary transition-colors"></i>
-                        </div>
-                        <p id="uploadText" class="text-lg font-bold text-cyber-primary group-hover:text-cyber-bright transition-colors uppercase tracking-widest">
-                            [ UPLOAD_TARGETS ]
-                        </p>
-                        <p class="text-xs text-cyber-primary/50 mt-2 font-mono">
-                            JPEG/PNG DETECTED // AUTO-COMPRESSION ON
-                        </p>
-                    </div>
-                </label>
-            </div>
-
-            <!-- Action Area -->
-            <div class="lg:col-span-1 flex flex-col gap-4">
-                <div class="cyber-panel p-5 flex-grow flex flex-col justify-center items-center text-center bg-black/40">
-                    <div id="fileStatusIcon" class="mb-3 text-cyber-dim">
-                        <i data-lucide="hard-drive" class="w-10 h-10"></i>
-                    </div>
-                    <p id="fileCountMessage" class="text-sm font-bold text-cyber-primary/50 mb-1">NO_DATA_STREAM</p>
-                    <p class="text-xs text-cyber-primary/30">Menunggu input...</p>
+        <!-- Left Sidebar: File List (Text Only for Performance) -->
+        <div class="w-2/3 flex flex-col border-r border-cyber-dim bg-black/50">
+            <!-- Toolbar -->
+            <div class="p-3 border-b border-cyber-dim flex justify-between items-center bg-black">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-cyber-primary/60">QUEUE:</span>
+                    <span id="queueCount" class="font-bold">0</span>
                 </div>
-
-                <button id="generateButton" onclick="generateMetadata()" disabled
-                        class="w-full py-4 btn-cyber-primary font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center group">
-                    <span class="flex items-center">
-                        <i data-lucide="cpu" class="w-5 h-5 mr-2 group-hover:animate-pulse"></i>
-                        EXECUTE_AI_PROTOCOL
-                    </span>
-                </button>
-            </div>
-        </section>
-
-        <!-- Result Display and Export -->
-        <section class="animate-fade-in">
-            <div class="flex flex-col lg:flex-row justify-between items-end lg:items-center mb-5 gap-4">
-                <h2 class="text-xl font-bold text-cyber-primary flex items-center uppercase tracking-widest border-l-4 border-cyber-primary pl-3">
-                    <i data-lucide="database" class="w-5 h-5 mr-3"></i> 
-                    OUTPUT_LOG
-                    <span id="resultCountBadge" class="ml-3 px-2 py-0.5 bg-cyber-primary text-black text-xs font-bold hidden">0</span>
-                </h2>
-                
-                <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto items-end">
-                    <!-- Model Selection -->
-                    <div class="w-full sm:w-64">
-                        <label for="aiModelSelect" class="block text-xs font-bold text-cyber-primary/70 mb-1 uppercase">Select_Algorithm</label>
-                        <select id="aiModelSelect" class="cyber-input w-full p-2.5 text-sm cursor-pointer rounded-none">
-                            <option value="">[ NULL ]</option>
-                            <option value="DALL-E 3">DALL-E_3</option>
-                            <option value="Midjourney">MIDJOURNEY_V6</option>
-                            <option value="Stable Diffusion">STABLE_DIFFUSION</option>
-                            <option value="Stable Diffusion XL">SDXL_TURBO</option>
-                            <option value="Adobe Firefly">ADOBE_FIREFLY</option>
-                            <option value="Leonardo.ai">LEONARDO_AI</option>
-                        </select>
-                    </div>
-
-                    <button id="exportButton" onclick="exportCSV()" disabled
-                            class="px-5 py-2.5 btn-cyber-success font-bold shadow-md disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed flex items-center text-sm transition-all h-[42px] whitespace-nowrap w-full sm:w-auto justify-center rounded-none uppercase tracking-wider">
-                        <i data-lucide="download-cloud" class="w-4 h-4 mr-2"></i> EXPORT_CSV
+                <div class="flex gap-2">
+                    <button id="generateButton" onclick="startProcessing()" disabled class="btn-cyber px-3 py-1 text-xs">
+                        START PROCESS
+                    </button>
+                    <button id="exportButton" onclick="exportCSV()" disabled class="btn-cyber px-3 py-1 text-xs border-cyber-accent text-cyber-accent hover:bg-cyber-accent">
+                        EXPORT CSV
                     </button>
                 </div>
             </div>
 
-            <div id="loadingIndicator" class="hidden my-8">
-                <div class="flex flex-col items-center justify-center p-8 border border-cyber-primary/30 bg-black/50 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-cyber-primary/5 animate-pulse"></div>
-                    <div class="cyber-loader mb-4"></div>
-                    <h3 class="text-lg font-bold text-cyber-primary animate-pulse">PROCESSING_NEURAL_NET...</h3>
-                    <p class="text-cyber-primary/60 text-xs mt-1 font-mono text-center max-w-md">Optimizing images & extracting semantic data...</p>
-                </div>
+            <!-- Virtualized-like List -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar relative bg-black" id="fileListContainer">
+                <table class="w-full text-left border-collapse">
+                    <thead class="sticky top-0 bg-cyber-dark z-10 text-xs uppercase tracking-wider text-cyber-primary/70">
+                        <tr>
+                            <th class="p-2 border-b border-cyber-dim w-12">#</th>
+                            <th class="p-2 border-b border-cyber-dim">Filename</th>
+                            <th class="p-2 border-b border-cyber-dim w-24">Status</th>
+                            <th class="p-2 border-b border-cyber-dim w-1/4">Title (Preview)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fileListBody" class="text-xs text-cyber-primary/80 divide-y divide-cyber-dim/30">
+                        <!-- Rows injected here -->
+                        <tr>
+                            <td colspan="4" class="p-8 text-center text-cyber-dim italic">
+                                NO_DATA // WAITING FOR INPUT
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-
-            <!-- Error/Status Message Box -->
-            <div id="messageBox" class="mb-4 p-4 text-sm hidden border-l-4 backdrop-blur-sm shadow-sm flex items-start font-mono" role="alert">
-                <div id="messageIcon" class="mr-3 mt-0.5 flex-shrink-0"></div>
-                <div id="messageContent"></div>
-            </div>
-            
-            <div id="resultsContainer" class="border border-cyber-dim bg-black overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] flex flex-col h-[600px] relative">
-                <!-- Grid overlay inside table -->
-                <div class="absolute inset-0 bg-[linear-gradient(rgba(0,255,65,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,65,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
-                
-                <div class="overflow-auto custom-scrollbar flex-grow z-10">
-                    <table id="metadataTable" class="min-w-full divide-y divide-cyber-dim">
-                        <thead class="cyber-table-head sticky top-0 z-20">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-bold text-cyber-primary uppercase tracking-widest w-12 border-r border-cyber-dim">ID</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-cyber-primary uppercase tracking-widest w-24 border-r border-cyber-dim">VISUAL</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-cyber-primary uppercase tracking-widest w-1/5 border-r border-cyber-dim">TITLE_STRING</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-cyber-primary uppercase tracking-widest w-1/4 border-r border-cyber-dim">DESC_DATA</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-cyber-primary uppercase tracking-widest w-1/4 border-r border-cyber-dim">KEYWORDS_ARRAY</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-cyber-alert uppercase tracking-widest w-1/5">PROMPT_INPUT</th>
-                            </tr>
-                        </thead>
-                        <tbody id="metadataTableBody" class="divide-y divide-cyber-dim">
-                            <!-- Empty State -->
-                            <tr>
-                                <td colspan="6" class="p-12 text-center">
-                                    <div class="flex flex-col items-center justify-center text-cyber-primary/30">
-                                        <i data-lucide="monitor-off" class="w-16 h-16 mb-4"></i>
-                                        <p class="text-xl font-bold tracking-widest">SYSTEM_IDLE</p>
-                                        <p class="text-sm font-mono mt-2">Waiting for visual data input...</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </section>
-        
-        <!-- Footer -->
-        <div class="mt-8 text-center text-xs text-cyber-primary/40 font-mono border-t border-cyber-dim/30 pt-4 w-full">
-             Running on GOOGLE_GEMINI_V2.0_FLASH // SYSTEM_TIME: <span id="clock"></span>
         </div>
 
+        <!-- Right Panel: Active Job & Details -->
+        <div class="w-1/3 flex flex-col bg-cyber-dark/30 relative">
+            
+            <!-- Active Image Preview (Only shows ONE image at a time) -->
+            <div class="h-1/3 border-b border-cyber-dim p-4 flex flex-col relative bg-black">
+                <div class="absolute top-2 left-2 text-[10px] text-cyber-primary/40 uppercase tracking-widest border border-cyber-dim px-2 py-0.5">Active Processor</div>
+                
+                <div id="activeImageContainer" class="flex-1 flex items-center justify-center border border-cyber-dim/50 border-dashed bg-cyber-dim/5 m-4">
+                    <div class="text-center text-cyber-primary/30">
+                        <i data-lucide="aperture" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                        <p class="text-[10px]">VISUAL FEED STANDBY</p>
+                    </div>
+                </div>
+                <img id="activeImage" class="absolute inset-0 w-full h-full object-contain p-4 hidden z-10" alt="Active Processing">
+                
+                <!-- Progress Bar -->
+                <div class="h-1 w-full bg-cyber-dim mt-auto absolute bottom-0 left-0">
+                    <div id="progressBar" class="h-full bg-cyber-primary transition-all duration-300 w-0 shadow-[0_0_10px_#00ff41]"></div>
+                </div>
+            </div>
+
+            <!-- Detail Editor for Selected/Active Item -->
+            <div class="flex-1 flex flex-col p-4 overflow-y-auto bg-black border-l border-cyber-dim">
+                <h3 class="text-xs font-bold text-cyber-primary mb-3 uppercase flex items-center gap-2">
+                    <i data-lucide="edit-3" class="w-3 h-3"></i> Metadata Editor
+                </h3>
+                
+                <div class="space-y-4 flex-1">
+                    <div>
+                        <label class="text-[10px] uppercase text-cyber-primary/60 mb-1 block">Title</label>
+                        <textarea id="editTitle" rows="2" class="cyber-input w-full p-2 text-xs" placeholder="..."></textarea>
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase text-cyber-primary/60 mb-1 block">Description</label>
+                        <textarea id="editDesc" rows="4" class="cyber-input w-full p-2 text-xs" placeholder="..."></textarea>
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase text-cyber-primary/60 mb-1 block">Keywords</label>
+                        <textarea id="editKeywords" rows="6" class="cyber-input w-full p-2 text-[10px] font-mono leading-relaxed" placeholder="..."></textarea>
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase text-cyber-alert/60 mb-1 block">Prompt Override</label>
+                        <textarea id="editPrompt" rows="2" class="cyber-input w-full p-2 text-xs border-cyber-alert/30 text-cyber-alert" placeholder="Optional..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-[10px] text-cyber-dim text-center">
+                    Changes save automatically to memory
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Core Application Logic -->
+    <!-- Hidden Overlay for Errors -->
+    <div id="errorToast" class="fixed bottom-4 right-4 max-w-sm bg-black border border-cyber-alert text-cyber-alert p-4 text-xs shadow-lg hidden z-50">
+        <div class="font-bold mb-1 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-3 h-3"></i> ERROR</div>
+        <div id="errorText"></div>
+    </div>
+
     <script>
-        // --- Global State ---
-        let selectedFiles = [];
-        let processedImagesData = [];
+        // --- CONFIG ---
+        // Jika Anda menjalankan ini di GitHub Pages, GANTI "" di bawah ini dengan API Key Anda (Contoh: "AIzaS...")
+        // Untuk preview di sini, biarkan kosong.
+        const API_KEY = ""; 
         const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
         
-        // --- API KEY CONFIGURATION ---
-        // WARNING: Hardcoded keys in client-side code are visible to anyone inspecting the page source.
-        const API_KEY = "AIzaSyC5EpEgYA9oovtRdIgkF3eZkUpGb4N-Ur8";
+        // --- STATE ---
+        let fileQueue = []; 
+        let isProcessing = false;
+        let selectedIndex = -1;
 
-        // --- Utility Functions ---
-        
-        // OPTIMIZED: Resize image before converting to base64
-        // This drastically reduces memory usage and speeds up API calls
-        function resizeAndConvertToBase64(file, maxWidth = 1024, quality = 0.7) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        // Calculate new dimensions
-                        if (width > height) {
-                            if (width > maxWidth) {
-                                height = Math.round(height * (maxWidth / width));
-                                width = maxWidth;
-                            }
-                        } else {
-                            if (height > maxWidth) {
-                                width = Math.round(width * (maxWidth / height));
-                                height = maxWidth;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // Convert to base64 (JPEG with reduced quality)
-                        // This removes the "data:image/jpeg;base64," prefix automatically in logic below or we split it here
-                        const dataUrl = canvas.toDataURL('image/jpeg', quality);
-                        const base64String = dataUrl.split(',')[1];
-                        resolve(base64String);
-                    };
-                    img.onerror = (error) => reject(error);
-                };
-                reader.onerror = (error) => reject(error);
-            });
-        }
-
-        async function generateContent(payload, maxRetries = 3, delay = 2000) {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${API_KEY}`;
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        if (result.candidates && result.candidates.length > 0) {
-                            return result;
-                        } else {
-                             throw new Error("API returned no candidates.");
-                        }
-                    } else if (response.status === 429) {
-                        // Rate limit - wait longer
-                        console.warn("Rate limit hit, retrying...");
-                        if (i < maxRetries - 1) {
-                            await new Promise(resolve => setTimeout(resolve, delay * 2)); 
-                            delay *= 2; 
-                            continue;
-                        } else {
-                            throw new Error(`Exceeded maximum retries (429).`);
-                        }
-                    } else {
-                        const errorBody = await response.json();
-                        throw new Error(`API failed: ${errorBody.error?.message || response.status}`);
-                    }
-                } catch (error) {
-                    if (i < maxRetries - 1) {
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        delay *= 2;
-                    } else {
-                        throw error;
-                    }
-                }
+        // --- DOM ELEMENTS ---
+        const els = {
+            fileListBody: document.getElementById('fileListBody'),
+            queueCount: document.getElementById('queueCount'),
+            btnGenerate: document.getElementById('generateButton'),
+            btnExport: document.getElementById('exportButton'),
+            activeImg: document.getElementById('activeImage'),
+            activeImgContainer: document.getElementById('activeImageContainer'),
+            progressBar: document.getElementById('progressBar'),
+            status: document.getElementById('systemStatus'),
+            inputs: {
+                title: document.getElementById('editTitle'),
+                desc: document.getElementById('editDesc'),
+                kw: document.getElementById('editKeywords'),
+                prompt: document.getElementById('editPrompt')
             }
-        }
+        };
 
-        function showMessage(message, type) {
-            const box = document.getElementById('messageBox');
-            const content = document.getElementById('messageContent');
-            const icon = document.getElementById('messageIcon');
-            
-            content.textContent = `>> ${message}`;
-            
-            // Reset base classes
-            box.className = 'mb-4 p-4 text-sm border-l-4 backdrop-blur-sm shadow-sm flex items-start font-mono transition-all duration-300';
-            
-            if (type === 'error') {
-                box.classList.add('bg-red-900/20', 'text-red-400', 'border-red-500');
-                icon.innerHTML = '<i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i>';
-            } else if (type === 'success') {
-                box.classList.add('bg-green-900/20', 'text-green-400', 'border-green-500');
-                icon.innerHTML = '<i data-lucide="check-square" class="w-5 h-5 text-green-500"></i>';
-            } else {
-                box.classList.add('bg-blue-900/20', 'text-blue-400', 'border-blue-500');
-                icon.innerHTML = '<i data-lucide="info" class="w-5 h-5 text-blue-500"></i>';
-            }
-            
-            box.classList.remove('hidden');
-            lucide.createIcons();
-        }
+        // --- INIT ---
+        window.onload = () => lucide.createIcons();
 
-        // --- UI Handlers ---
+        // --- CORE LOGIC ---
 
         function handleFileSelect(files) {
-            // Limit increased but warning added for performance
-            selectedFiles = Array.from(files).slice(0, 100);
-            
-            const fileStatusIcon = document.getElementById('fileStatusIcon');
-            const fileCountMessage = document.getElementById('fileCountMessage');
-            const generateButton = document.getElementById('generateButton');
-            const uploadLabel = document.getElementById('uploadLabel');
-            const resultCountBadge = document.getElementById('resultCountBadge');
-            
-            if (selectedFiles.length > 0) {
-                document.getElementById('uploadText').innerHTML = `<span class="text-white bg-cyber-primary px-2 text-black mr-2">${selectedFiles.length}</span> FILES_LOCKED`;
-                
-                fileCountMessage.textContent = `${selectedFiles.length} UNIT(S) READY FOR ANALYSIS`;
-                fileCountMessage.classList.replace('text-cyber-primary/50', 'text-cyber-primary');
-                
-                fileStatusIcon.innerHTML = `<i data-lucide="check-circle" class="w-10 h-10 text-cyber-primary animate-pulse"></i>`;
-                lucide.createIcons();
-                
-                generateButton.disabled = false;
-                document.getElementById('exportButton').disabled = true;
-                
-                processedImagesData = []; 
-                renderTable();
-                
-                resultCountBadge.textContent = selectedFiles.length;
-                resultCountBadge.classList.remove('hidden');
-                
-                // Active state for upload box
-                uploadLabel.classList.add('border-cyber-primary', 'bg-cyber-dim/20');
-                uploadLabel.classList.remove('border-cyber-dim', 'bg-black/50');
-            } else {
-                document.getElementById('uploadText').textContent = '[ UPLOAD_TARGETS ]';
-                fileCountMessage.textContent = 'NO_DATA_STREAM';
-                fileCountMessage.classList.replace('text-cyber-primary', 'text-cyber-primary/50');
-                
-                fileStatusIcon.innerHTML = `<i data-lucide="hard-drive" class="w-10 h-10"></i>`;
-                lucide.createIcons();
-                
-                generateButton.disabled = true;
-                resultCountBadge.classList.add('hidden');
-                
-                // Reset upload box
-                uploadLabel.classList.remove('border-cyber-primary', 'bg-cyber-dim/20');
-                uploadLabel.classList.add('border-cyber-dim', 'bg-black/50');
-            }
-            document.getElementById('messageBox').classList.add('hidden');
-        }
+            const newFiles = Array.from(files);
+            if (newFiles.length === 0) return;
 
-        function renderTable() {
-            const tableBody = document.getElementById('metadataTableBody');
-            tableBody.innerHTML = '';
-            
-            if (selectedFiles.length === 0 && processedImagesData.length === 0) {
-                 tableBody.innerHTML = `<tr><td colspan="6" class="p-12 text-center"><div class="flex flex-col items-center justify-center text-cyber-primary/30"><i data-lucide="monitor-off" class="w-16 h-16 mb-4"></i><p class="text-xl font-bold tracking-widest">SYSTEM_IDLE</p><p class="text-sm font-mono mt-2">Waiting for visual data input...</p></div></td></tr>`;
-                 lucide.createIcons();
-                 document.getElementById('exportButton').disabled = true;
-                 return;
-            }
-            
-            let dataToRender = processedImagesData.length > 0 ? processedImagesData : selectedFiles.map( (file, index) => ({
-                id: index,
-                fileName: file.name,
-                status: 'pending',
-                imagePreviewUrl: URL.createObjectURL(file), // Still use blob for preview as it's fast
-                title: '', description: '', keywords: [], prompt: '', error: null
+            const startIndex = fileQueue.length;
+            const newItems = newFiles.map((file, i) => ({
+                id: startIndex + i,
+                file: file,
+                name: file.name,
+                status: 'pending', 
+                title: '',
+                description: '',
+                keywords: [],
+                prompt: ''
             }));
 
-            // Use DocumentFragment for faster DOM insertion
-            const fragment = document.createDocumentFragment();
-
-            dataToRender.forEach((data, index) => {
-                const isProcessing = data.status === 'processing';
-                const isError = data.status === 'error';
-                const row = document.createElement('tr');
-                
-                row.className = 'cyber-table-row border-b border-cyber-dim/30 transition-colors';
-                if(isError) row.classList.add('bg-red-900/10');
-                
-                let titleContent, descriptionContent, keywordsContent, promptContent;
-
-                if (isProcessing) {
-                    titleContent = '<div class="h-4 bg-cyber-primary/20 animate-pulse w-3/4 my-2"></div><p class="text-[10px] text-cyber-primary/50 mt-1">Compressing & Analyzing...</p>';
-                    descriptionContent = '<div class="h-12 bg-cyber-primary/10 animate-pulse w-full my-2"></div>';
-                    keywordsContent = '<div class="h-12 bg-cyber-primary/10 animate-pulse w-full my-2"></div>';
-                    promptContent = '<div class="h-12 bg-cyber-primary/10 animate-pulse w-full my-2"></div>';
-                } else if (isError) {
-                    const errorMessage = data.error || 'FAILED';
-                    titleContent = `<span class="flex items-center text-red-500 font-bold text-xs font-mono"><i data-lucide="x-octagon" class="w-4 h-4 mr-1"></i> ERR: ${errorMessage}</span>`;
-                    descriptionContent = '<span class="text-red-900">NULL</span>';
-                    keywordsContent = '<span class="text-red-900">NULL</span>';
-                    promptContent = '<span class="text-red-900">NULL</span>';
-                } else if (data.title || data.status === 'pending') {
-                    const isPending = data.status === 'pending';
-                    const titleVal = data.title || '';
-                    const descVal = data.description || '';
-                    const keywordsVal = data.keywords.join(', ');
-                    const promptVal = data.prompt || '';
-
-                    if(isPending) {
-                        titleContent = '<span class="text-cyber-dim italic text-xs">Awaiting_cycles...</span>';
-                        descriptionContent = '<span class="text-cyber-dim italic text-xs">...</span>';
-                        keywordsContent = '<span class="text-cyber-dim italic text-xs">...</span>';
-                        promptContent = `<textarea rows="4" placeholder="> Input prompt override..." class="cyber-input w-full p-2 text-xs font-mono border-cyber-dim/50">${promptVal}</textarea>`; 
-                    } else {
-                        titleContent = `<textarea rows="2" class="cyber-input w-full p-2 text-sm font-bold text-cyber-primary bg-black border-none resize-y">${titleVal}</textarea>`;
-                        descriptionContent = `<textarea rows="4" class="cyber-input w-full p-2 text-xs text-cyber-primary/80 bg-black border-none resize-y">${descVal}</textarea>`;
-                        keywordsContent = `<textarea rows="4" class="cyber-input w-full p-2 text-[10px] text-cyber-primary/60 font-mono bg-black border-none resize-y leading-tight">${keywordsVal}</textarea>`;
-                        promptContent = `<textarea rows="4" placeholder="> Input prompt..." class="cyber-input w-full p-2 text-xs text-cyber-alert border-cyber-alert/30 focus:border-cyber-alert">${promptVal}</textarea>`;
-                    }
-                }
-
-                // Added loading="lazy" for performance optimization
-                row.innerHTML = `
-                    <td class="px-4 py-4 whitespace-nowrap text-xs font-mono text-cyber-dim border-r border-cyber-dim/30">#${String(index + 1).padStart(3, '0')}</td>
-                    <td class="px-6 py-4 border-r border-cyber-dim/30">
-                        <div class="relative group w-20 h-20 border border-cyber-primary/50 p-1 bg-black">
-                            <img src="${data.imagePreviewUrl}" alt="${data.fileName}" loading="lazy" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" onerror="this.onerror=null;this.src='https://placehold.co/80x80/000000/00ff41?text=ERR';">
-                            <div class="absolute inset-0 bg-cyber-primary/10 opacity-0 group-hover:opacity-100 pointer-events-none"></div>
-                        </div>
-                        <div class="text-[9px] text-cyber-primary/50 mt-1 truncate w-20 font-mono">${data.fileName}</div>
-                    </td>
-                    <td class="px-6 py-4 align-top border-r border-cyber-dim/30">${titleContent}</td>
-                    <td class="px-6 py-4 align-top border-r border-cyber-dim/30">${descriptionContent}</td>
-                    <td class="px-6 py-4 align-top border-r border-cyber-dim/30">${keywordsContent}</td>
-                    <td class="px-6 py-4 align-top">${promptContent}</td>
-                `;
-                fragment.appendChild(row);
-
-                // Listeners handled after append logic... but since we use innerHTML, we need to querySelector after appending to DOM
-                // To support bulk listeners cleanly, we'll delegate or attach after render.
-            });
+            fileQueue = [...fileQueue, ...newItems];
             
-            tableBody.appendChild(fragment);
-
-            // Re-attach listeners now that elements are in DOM
-            const rows = tableBody.querySelectorAll('tr');
-            rows.forEach((row, index) => {
-                const data = dataToRender[index];
-                if (!data) return;
-
-                const titleTextarea = row.querySelector('td:nth-child(3) textarea');
-                const descriptionTextarea = row.querySelector('td:nth-child(4) textarea');
-                const keywordsTextarea = row.querySelector('td:nth-child(5) textarea');
-                const promptTextarea = row.querySelector('td:nth-child(6) textarea');
-
-                if (titleTextarea) titleTextarea.addEventListener('change', (e) => data.title = e.target.value);
-                if (descriptionTextarea) descriptionTextarea.addEventListener('change', (e) => data.description = e.target.value);
-                if (keywordsTextarea) keywordsTextarea.addEventListener('change', (e) => data.keywords = e.target.value.split(',').map(k => k.trim()).filter(k => k.length > 0));
-                if (promptTextarea) promptTextarea.addEventListener('change', (e) => data.prompt = e.target.value);
-            });
+            renderList();
+            updateStats();
             
-            lucide.createIcons();
-            
-            const readyCount = processedImagesData.filter(d => d.status === 'complete').length;
-            document.getElementById('exportButton').disabled = readyCount === 0;
-            
-            // Update badge for completed
-            if (readyCount > 0) {
-                 const badge = document.getElementById('resultCountBadge');
-                 badge.innerHTML = `${readyCount}/${processedImagesData.length}`;
-                 badge.classList.remove('hidden');
-            }
+            if (selectedIndex === -1) selectItem(startIndex);
         }
 
-        async function generateMetadata() {
-            if (selectedFiles.length === 0) {
-                showMessage("INPUT_REQUIRED: Upload at least one visual unit.", 'error');
+        function renderList() {
+            if (fileQueue.length === 0) return;
+
+            els.fileListBody.innerHTML = fileQueue.map((item, index) => {
+                let statusColor = 'text-cyber-dim';
+                let statusText = 'PENDING';
+                let rowClass = index === selectedIndex ? 'active-row bg-cyber-primary/5' : 'hover:bg-cyber-dim/20';
+
+                if (item.status === 'processing') {
+                    statusColor = 'text-cyber-warning animate-pulse';
+                    statusText = 'PROCESSING...';
+                    rowClass += ' bg-cyber-dim/30';
+                } else if (item.status === 'complete') {
+                    statusColor = 'text-cyber-primary';
+                    statusText = 'DONE';
+                } else if (item.status === 'error') {
+                    statusColor = 'text-cyber-alert';
+                    statusText = 'FAILED';
+                }
+
+                return `
+                    <tr onclick="selectItem(${index})" class="cursor-pointer transition-colors border-b border-cyber-dim/20 ${rowClass}">
+                        <td class="p-2 font-mono text-cyber-dim">${index + 1}</td>
+                        <td class="p-2 truncate max-w-[150px]" title="${item.name}">${item.name}</td>
+                        <td class="p-2 font-mono text-[10px] ${statusColor}">${statusText}</td>
+                        <td class="p-2 truncate max-w-[200px] text-cyber-primary/60 italic">${item.title || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            els.queueCount.innerText = fileQueue.length;
+            els.btnGenerate.disabled = fileQueue.length === 0 || isProcessing;
+            
+            const completed = fileQueue.filter(i => i.status === 'complete').length;
+            els.btnExport.disabled = completed === 0;
+            
+            const total = fileQueue.length;
+            const processed = fileQueue.filter(i => i.status === 'complete' || i.status === 'error').length;
+            const percent = total === 0 ? 0 : (processed / total) * 100;
+            els.progressBar.style.width = `${percent}%`;
+        }
+
+        // --- SELECTION & EDITOR ---
+
+        window.selectItem = (index) => {
+            selectedIndex = index;
+            const item = fileQueue[index];
+            
+            els.inputs.title.value = item.title;
+            els.inputs.desc.value = item.description;
+            els.inputs.kw.value = item.keywords.join(', ');
+            els.inputs.prompt.value = item.prompt;
+
+            renderList(); 
+            showPreviewImage(item.file);
+        };
+
+        els.inputs.title.oninput = (e) => { if(selectedIndex>-1) fileQueue[selectedIndex].title = e.target.value; renderList(); };
+        els.inputs.desc.oninput = (e) => { if(selectedIndex>-1) fileQueue[selectedIndex].description = e.target.value; };
+        els.inputs.kw.oninput = (e) => { if(selectedIndex>-1) fileQueue[selectedIndex].keywords = e.target.value.split(',').map(s=>s.trim()); };
+        els.inputs.prompt.oninput = (e) => { if(selectedIndex>-1) fileQueue[selectedIndex].prompt = e.target.value; };
+
+        // --- IMAGE HANDLING (ZERO LEAK) ---
+
+        let currentObjectUrl = null;
+
+        function showPreviewImage(file) {
+            if (currentObjectUrl) {
+                URL.revokeObjectURL(currentObjectUrl);
+                currentObjectUrl = null;
+            }
+
+            if (!file) {
+                els.activeImg.classList.add('hidden');
+                els.activeImgContainer.classList.remove('hidden');
                 return;
             }
 
-            document.getElementById('generateButton').disabled = true;
-            document.getElementById('exportButton').disabled = true;
-            document.getElementById('loadingIndicator').classList.remove('hidden');
-            document.getElementById('resultsContainer').classList.add('opacity-50'); 
-            document.getElementById('messageBox').classList.add('hidden');
+            currentObjectUrl = URL.createObjectURL(file);
+            els.activeImg.src = currentObjectUrl;
+            els.activeImg.classList.remove('hidden');
+            els.activeImgContainer.classList.add('hidden');
+        }
+
+        // --- PROCESSING LOGIC ---
+
+        function resizeAndBase64(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const max = 800; 
+                        let w = img.width, h = img.height;
+                        if (w > h) { if (w > max) { h *= max/w; w = max; } }
+                        else { if (h > max) { w *= max/h; h = max; } }
+                        
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        
+                        resolve(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function startProcessing() {
+            if (isProcessing) return;
+            isProcessing = true;
+            els.btnGenerate.disabled = true;
+            els.status.innerText = "SYSTEM_BUSY // PROCESSING QUEUE";
+
+            for (let i = 0; i < fileQueue.length; i++) {
+                if (fileQueue[i].status === 'pending') {
+                    await processItem(i);
+                }
+            }
+
+            isProcessing = false;
+            els.btnGenerate.disabled = false;
+            els.status.innerText = "SYSTEM_IDLE // JOB COMPLETE";
+            updateStats();
+        }
+
+        async function processItem(index) {
+            const item = fileQueue[index];
             
-            document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            item.status = 'processing';
+            selectItem(index); 
+            updateStats();
+            renderList();
 
-            processedImagesData = selectedFiles.map((file, index) => ({
-                id: index,
-                fileName: file.name,
-                fileType: file.type,
-                fileObject: file,
-                imagePreviewUrl: URL.createObjectURL(file),
-                status: 'pending',
-                title: '', description: '', keywords: [], prompt: '', error: null
-            }));
+            const maxRetries = 3;
+            let retryCount = 0;
+            let success = false;
 
-            renderTable();
-
-            let successCount = 0;
-            let errorCount = 0;
-
-            for (let i = 0; i < processedImagesData.length; i++) {
-                const dataItem = processedImagesData[i];
-                dataItem.status = 'processing';
-                renderTable(); 
-                
+            while (!success && retryCount < maxRetries) {
                 try {
-                    // Optimized: Resize before sending
-                    // This is the key change for performance
-                    const base64Data = await resizeAndConvertToBase64(dataItem.fileObject);
-
-                    const systemInstruction = "Act as a specialized AI metadata generator for premium stock photography agencies like Adobe Stock. Your goal is to generate high-quality, commercially relevant metadata. You must provide a Title (short, punchy, in English), a Description (detailed, describing content, mood, and usage, in English), and a list of at least 35 Keywords (mix of conceptual, technical, and descriptive terms, comma-separated in English, no duplicates). The output MUST be a single valid JSON object.";
+                    const base64 = await resizeAndBase64(item.file);
                     
-                    const payload = {
-                        contents: [{
-                            parts: [
-                                { text: "Analyze the provided image and generate the required stock metadata in the specified JSON format. Ensure keywords are rich and diverse (min 35). Output ONLY pure JSON." },
-                                { inlineData: { mimeType: "image/jpeg", data: base64Data } } // Always JPEG after resize
-                            ]
-                        }],
-                        systemInstruction: { parts: [{ text: systemInstruction }] },
-                        generationConfig: {
-                            responseMimeType: "application/json",
-                            responseSchema: {
-                                type: "OBJECT",
-                                properties: {
-                                    "title": { "type": "STRING" },
-                                    "description": { "type": "STRING" },
-                                    "keywords": { "type": "ARRAY", "items": { "type": "STRING" } }
+                    const prompt = "Generate stock photo metadata. Required keys: 'title' (string), 'description' (string), 'keywords' (array of strings, min 35 items). Output STRICT JSON only.";
+                    
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${API_KEY}`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            contents: [{ parts: [{text: prompt}, {inlineData: {mimeType: "image/jpeg", data: base64}}] }],
+                            generationConfig: { 
+                                responseMimeType: "application/json",
+                                // FORCE SCHEMA STRUCTURE
+                                responseSchema: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        "title": { "type": "STRING" },
+                                        "description": { "type": "STRING" },
+                                        "keywords": { "type": "ARRAY", "items": { "type": "STRING" } }
+                                    },
+                                    required: ["title", "description", "keywords"]
                                 }
                             }
-                        }
-                    };
+                        })
+                    });
 
-                    const apiResponse = await generateContent(payload);
-                    let jsonText = apiResponse.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
-                    if (!jsonText) throw new Error("Empty response stream.");
-
-                    // Robust JSON Cleanup
-                    jsonText = jsonText.trim();
-                    jsonText = jsonText.replace(/^```json\s*/i, '').replace(/\s*```$/, '');
-                    const firstBrace = jsonText.indexOf('{');
-                    const lastBrace = jsonText.lastIndexOf('}');
-                    if (firstBrace !== -1 && lastBrace !== -1) {
-                        jsonText = jsonText.substring(firstBrace, lastBrace + 1);
-                    }
-
-                    let parsedJson;
-                    try {
-                        parsedJson = JSON.parse(jsonText);
-                    } catch (e) {
-                         console.error("Parse Error", e);
-                         console.log("Raw Text:", jsonText); 
-                         throw new Error("Invalid JSON structure.");
+                    if (!response.ok) {
+                        const errorText = await response.text().catch(() => "Unknown API Error");
+                        throw new Error(`API_ERR ${response.status}: ${errorText}`);
                     }
                     
-                    if (parsedJson && parsedJson.title && parsedJson.description && Array.isArray(parsedJson.keywords)) {
-                        dataItem.title = parsedJson.title;
-                        dataItem.description = parsedJson.description;
-                        dataItem.keywords = parsedJson.keywords;
-                        dataItem.status = 'complete';
-                        successCount++;
+                    const data = await response.json();
+                    let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!text) throw new Error("NO_DATA");
+
+                    // AGGRESSIVE CLEANUP for Markdown Blocks
+                    text = text.trim();
+                    if (text.startsWith('```')) {
+                         text = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/, '');
+                    }
+
+                    const json = JSON.parse(text);
+                    
+                    // Case-insensitive fallback
+                    item.title = json.title || json.Title || "";
+                    item.description = json.description || json.Description || "";
+                    item.keywords = json.keywords || json.Keywords || [];
+                    item.status = 'complete';
+
+                    if (selectedIndex === index) {
+                        els.inputs.title.value = item.title;
+                        els.inputs.desc.value = item.description;
+                        els.inputs.kw.value = item.keywords.join(', ');
+                    }
+                    success = true;
+
+                } catch (err) {
+                    console.error(`Retry ${retryCount+1}/${maxRetries} failed:`, err);
+                    retryCount++;
+                    if (retryCount >= maxRetries) {
+                        item.status = 'error';
+                        const msg = err.message.length > 50 ? err.message.substring(0, 50) + "..." : err.message;
+                        showError(`Item #${index + 1} Failed: ${msg}`);
                     } else {
-                        throw new Error("Incomplete data set.");
+                        await new Promise(r => setTimeout(r, 2000 * retryCount));
                     }
-                } catch (error) {
-                    console.error(`Processing error for ${dataItem.fileName}:`, error);
-                    dataItem.status = 'error';
-                    
-                    if (error.message.includes('API')) {
-                         dataItem.error = 'CONNECTION_LOST';
-                    } else if (error.message.includes('JSON')) {
-                         dataItem.error = 'DATA_CORRUPT';
-                    } else {
-                         dataItem.error = 'PROCESS_FAILED';
-                    }
-                    errorCount++;
                 }
-                
-                // Slightly reduced delay since payloads are smaller now
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                renderTable();
             }
-
-            document.getElementById('loadingIndicator').classList.add('hidden');
-            document.getElementById('resultsContainer').classList.remove('opacity-50');
-            document.getElementById('generateButton').disabled = false;
             
-            if (successCount > 0) {
-                showMessage(`OPERATION COMPLETE: ${successCount} processed. ${errorCount > 0 ? `(${errorCount} failed)` : ''}`, 'success');
-                const readyCount = processedImagesData.filter(d => d.status === 'complete').length;
-                document.getElementById('exportButton').disabled = readyCount === 0;
-            } else if (errorCount > 0) {
-                showMessage(`SYSTEM FAILURE: ${errorCount} errors detected. Check console logs.`, 'error');
-            }
+            renderList();
+            updateStats();
         }
 
-        function exportCSV() {
-            if (processedImagesData.length === 0) {
-                showMessage("EXPORT_ERROR: No data resident in memory.", 'info');
-                return;
-            }
+        // --- UTILS ---
 
-            const modelSelect = document.getElementById('aiModelSelect');
-            const selectedModel = modelSelect.value || "UNKNOWN_MODEL";
+        function showError(msg) {
+            const toast = document.getElementById('errorToast');
+            document.getElementById('errorText').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 5000);
+        }
 
-            const header = ["Filename", "Title", "Keywords", "Prompt", "Model"];
-            
-            const tableBody = document.getElementById('metadataTableBody');
-            const exportedData = [];
-            const rows = tableBody.querySelectorAll('tr');
-
-            processedImagesData.forEach((item, index) => {
-                if (item.status === 'complete') {
-                    const row = rows[index];
-                    if (!row) return;
-                    
-                    const titleArea = row.querySelector('td:nth-child(3) textarea');
-                    const keywordsArea = row.querySelector('td:nth-child(5) textarea');
-                    const promptArea = row.querySelector('td:nth-child(6) textarea');
-
-                    const currentTitle = titleArea ? titleArea.value : item.title;
-                    const currentKeywordsString = keywordsArea ? keywordsArea.value : item.keywords.join(', ');
-                    const currentPrompt = promptArea ? promptArea.value : item.prompt;
-
-                    const escapeCSV = (str) => {
-                        if (!str) return "";
-                        let val = str.toString().replace(/"/g, '""');
-                        if (val.includes(";") || val.includes("\n") || val.includes("\"")) {
-                            val = `"${val}"`;
-                        }
-                        return val;
-                    };
-
-                    if (currentTitle) {
-                         exportedData.push([
-                            escapeCSV(item.fileName),
-                            escapeCSV(currentTitle), 
-                            escapeCSV(currentKeywordsString), 
-                            escapeCSV(currentPrompt),
-                            escapeCSV(selectedModel)
-                        ]);
-                    }
+        window.exportCSV = () => {
+            const rows = [["Filename","Title","Description","Keywords"]];
+            fileQueue.forEach(f => {
+                if (f.status === 'complete') {
+                    rows.push([
+                        `"${f.name}"`,
+                        `"${f.title.replace(/"/g, '""')}"`,
+                        `"${f.description.replace(/"/g, '""')}"`,
+                        `"${f.keywords.join(', ')}"`
+                    ]);
                 }
             });
-
-            if (exportedData.length === 0) {
-                showMessage("EXPORT_ABORTED: No valid records found.", 'info');
-                return;
-            }
-
-            const csvContent = [
-                header.join(";"),
-                ...exportedData.map(row => row.join(";"))
-            ].join("\n");
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.setAttribute('href', url);
-            link.setAttribute('download', `DATA_DUMP_${new Date().getTime()}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
             
-            showMessage(`DATA DUMP SUCCESSFUL: ${exportedData.length} records written to disk.`, 'success');
-        }
-
-        window.onload = () => {
-             lucide.createIcons();
-             renderTable();
-             // Simple clock for footer
-            setInterval(() => {
-                const now = new Date();
-                const timeElement = document.getElementById('clock');
-                if(timeElement) timeElement.innerText = now.toISOString();
-            }, 1000);
+            const blob = new Blob([rows.join("\n")], {type: 'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `METAGEN_EXPORT_${Date.now()}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         };
 
         window.handleFileSelect = handleFileSelect;
-        window.generateMetadata = generateMetadata;
-        window.exportCSV = exportCSV;
-
+        window.startProcessing = startProcessing;
     </script>
 </body>
 </html>
